@@ -11,7 +11,7 @@ are split from read-only inspection.
 
 ## What Is Included
 
-- A Codex-style skill at `skills/meta-quest-workflow/SKILL.md`.
+- A self-contained Codex skill under `skills/meta-quest-workflow/`.
 - ADB install, grant, launch, logcat, screenshot, and artifact collection
   workflows.
 - Quest camera metadata collection through ADB and optional broker-style
@@ -115,6 +115,10 @@ Use the narrowest provider that answers the question:
 
 ```text
 skills/meta-quest-workflow/SKILL.md
+skills/meta-quest-workflow/agents/openai.yaml
+skills/meta-quest-workflow/assets/mcp-config-example.json
+skills/meta-quest-workflow/references/*.md
+skills/meta-quest-workflow/scripts/*.ps1
 docs/adb-basics.md
 docs/apk-install-launch.md
 docs/artifact-and-evidence-discipline.md

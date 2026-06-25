@@ -1,0 +1,4 @@
+interface:
+  display_name: "Meta Quest Workflow"
+  short_description: "Quest ADB, APK, capture, and MCP workflows"
+  default_prompt: "Use $meta-quest-workflow to validate a Quest APK launch with ADB, logcat, screenshots, and evidence capture."

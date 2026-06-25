@@ -25,6 +25,19 @@ function Get-AdbArguments {
     return @("-s", $Serial) + $Arguments
 }
 
+function Join-ProcessArguments {
+    param([string[]]$Arguments)
+
+    return (($Arguments | ForEach-Object {
+        if ($_ -match '[\s"]') {
+            '"' + ($_ -replace '"', '\"') + '"'
+        }
+        else {
+            $_
+        }
+    }) -join ' ')
+}
+
 function Invoke-AdbText {
     param(
         [string[]]$Arguments,
@@ -54,8 +67,13 @@ function Invoke-AdbBinary {
     $adbArgs = Get-AdbArguments -Arguments $Arguments
     $psi = [System.Diagnostics.ProcessStartInfo]::new()
     $psi.FileName = $Adb
-    foreach ($arg in $adbArgs) {
-        [void]$psi.ArgumentList.Add($arg)
+    if ($null -ne $psi.ArgumentList) {
+        foreach ($arg in $adbArgs) {
+            [void]$psi.ArgumentList.Add($arg)
+        }
+    }
+    else {
+        $psi.Arguments = Join-ProcessArguments -Arguments $adbArgs
     }
     $psi.UseShellExecute = $false
     $psi.RedirectStandardOutput = $true
