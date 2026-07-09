@@ -1,6 +1,6 @@
 ---
 name: meta-quest-workflow
-description: Use when working with Meta Quest headsets, ADB, Quest APK install/launch/validation, screenshots, logcat, Perfetto, Camera2 metadata, broker-style localhost probes, or Meta Horizon MCP/hzdb workflows.
+description: Use when working with Meta Quest headsets, ADB, Quest APK install/launch/validation, Spatial SDK panels, Quest virtual keyboards, questionnaire placement, screenshots, logcat, Perfetto, Camera2 metadata, broker-style localhost probes, or Meta Horizon MCP/hzdb workflows.
 ---
 
 # Meta Quest Workflow
@@ -228,6 +228,51 @@ Keep these sources separate:
 - Direct stream frame/status endpoints: app, broker, VNC, or MJPEG evidence
   pulled without relying on host foreground. This proves that the stream route
   produced content, not that the Quest panel presented it.
+
+## Spatial Panels And Quest Keyboard
+
+For startup questionnaires or required 2D panels, treat placement as part of
+the app contract, not decoration:
+
+- Place the first panel in the user's current gaze line after the app sets its
+  reference space/view origin. Use an explicit transform with a comfortable
+  standing/sitting eye height, commonly about `1.45m` to `1.60m`, and about
+  `1.5m` to `2.0m` away.
+- Confirm the app's coordinate sign convention before judging placement. In
+  some native Quest/Spatial SDK panel setups, negative Z is the in-front panel
+  direction. Log the chosen `y`, signed distance, and a marker such as
+  `placement=current-gaze-line`.
+- Do not trust ADB `screencap` alone for panel placement. Quest screenshots can
+  omit or flatten compositor/media layers. Pair screenshots with app log
+  markers and, when needed, a headset/cast/operator witness.
+- If a panel is only for setup, add a debug dismissal route so video-surface
+  visual smokes can capture unobstructed runtime evidence.
+
+For Quest virtual keyboard behavior in native Android/Compose panels:
+
+- Declare the relevant Quest keyboard feature(s), such as
+  `com.oculus.feature.VIRTUAL_KEYBOARD` and `oculus.software.overlay_keyboard`,
+  and set the activity soft-input mode intentionally, for example
+  `stateAlwaysVisible|adjustNothing` when startup text entry must open
+  immediately.
+- For Compose text fields, request focus with `FocusRequester`, call
+  `LocalSoftwareKeyboardController.show()`, and also invoke
+  `InputMethodManager.showSoftInput()` from the focused Android view. Retry
+  from `post`/`postDelayed` and on focus/click because the panel view may not
+  be served by input method immediately at first render.
+- Log keyboard requests explicitly. If Android reports
+  `Ignoring showSoftInput` or keyboard evidence is ambiguous, keep a
+  controller/D-pad-passable fallback path rather than blocking the experiment
+  on text entry.
+
+For questionnaires:
+
+- Assign participant IDs in the background when possible; do not display a
+  participant-ID input unless the protocol explicitly requires it.
+- Prefer multiple-choice controller-accessible fields for categorical values
+  such as handedness (`Left`, `Right`, `Ambidextrous`).
+- Make the full scenario passable through bounded emulated controller responses
+  for smoke tests, then reserve physical controller gates for real-button proof.
 
 ## Tracking Boundary
 
