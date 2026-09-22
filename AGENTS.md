@@ -1,5 +1,7 @@
 # Agent Notes
 
+> Mandatory first read: [for-ai/README.md](./for-ai/README.md). It is the YAGNI control-plane router; then follow the project-specific rules below.
+
 This repository is public and portable. Keep committed content free of local
 machine paths, private repository names, device serials, package identities,
 generated APKs, screenshots, logs, pairing material, signing keys, and private
