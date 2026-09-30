@@ -107,8 +107,12 @@ Read only the playbooks needed for the task:
     inspection or interposition, bounded input synthesis, or Spatial SDK and
     OpenXR integration work
 16. `docs/termux-linux-sidecars.md` when Termux or Wi-Fi ADB is involved
-17. `docs/meta-horizon-mcp-and-hzdb.md` for Meta VR CLI/MCP or Meta XR Operator
-18. `docs/meta-vr-cli-evidence-profiles.md` for pinned Meta health, bounded
+17. `docs/apk-shell-capability-playbook.md` for APK-to-shell identity,
+    attribution, Binder, loopback/Unix transport, FD handoff, or helper lifetime
+    and `docs/offline-hotspot-shell-ble-handoff.md` for the tested composition,
+    pinned source map, and collaborator reproduction guidance
+18. `docs/meta-horizon-mcp-and-hzdb.md` for Meta VR CLI/MCP or Meta XR Operator
+19. `docs/meta-vr-cli-evidence-profiles.md` for pinned Meta health, bounded
     logcat, screenshot, or XR frame-pacing Perfetto evidence
 
 When this skill is installed without the repo docs, use only the validated
@@ -271,9 +275,10 @@ project the broader Meta VR CLI or MCP surface through that profile.
 ## Default Local Product Shape
 
 Use File Manager's current inspected-deployment commands and Kiosk routes from
-`docs/rusty-morphospace-default-device-loop.md`. Require exact artifact,
-serial, installed-byte, resolved-launcher, foreground, and owner-state
-readback. Confirm runtime truth through the participating app.
+`docs/rusty-morphospace-default-device-loop.md`. Bind the exact artifact and,
+for device operations, the exact serial. Confirm installed bytes for an install
+claim, resolved launcher and foreground for a launch claim, and the
+participating app's owner-state readback for a runtime claim.
 An installed-byte observe may pass while a Guardian, lock-screen, or Home
 Activity keeps foreground/resumed/process state false; keep that launch
 blocker as a separate claim.
@@ -373,6 +378,15 @@ Manifold command/status payloads.
   unrelated Store apps to clean ordinary background tasks.
 - Treat Termux as a normal Android app. It becomes ADB-shell-capable only when
   an already-authorized live route reports `uid=2000(shell)`.
+- Treat that shell lease as transport, not proof that a saved-source Wi-Fi
+  transition works. Check reflective names against the target framework before
+  classifying a lookup failure as missing authority. In AOSP Android 14,
+  `NETWORK_SELECTION_ENABLED` is the enabled-status field, `DISABLED_NONE` is
+  the no-disable-reason field, and `NETWORK_SELECTION_ENABLE` is a diagnostic
+  label rather than a field. A read-only API 34 Quest probe confirmed those two
+  fields, the disable-reason accessor, and `NoSuchFieldException` for the label;
+  connectivity remained unchanged. Require effective readback before claiming
+  a transition; do not infer that arbitrary source switching works.
 - Treat Wi-Fi Direct or LocalOnlyHotspot topology as separate from Wireless ADB
   readiness. Require current TLS listener state and shell-UID readback.
 - A Quest-local HTTP/WebSocket service is an app or Manifold adapter. It may
